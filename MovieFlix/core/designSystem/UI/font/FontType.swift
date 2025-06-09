@@ -10,4 +10,5 @@ extension String {
     static let regular = "Montserrat-Regular"
     static let bold = "Montserrat-Bold"
     static let extraBold = "Montserrat-ExtraBold"
+    static let black = "Montserrat-Black"
 }
