@@ -80,3 +80,4 @@ iOSInjectionProject/
 
 # Secrets configuration
 **/*.xcconfig
+Secrets.plist
