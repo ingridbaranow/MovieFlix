@@ -19,7 +19,6 @@ struct DetailsEntity: Codable {
     let budget: Int
     let revenue: Int
     let posterPath: String?
-    var isFavorite: Bool = false
     
     enum CodingKeys: String, CodingKey {
         case id

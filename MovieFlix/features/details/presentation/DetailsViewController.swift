@@ -10,72 +10,78 @@ import SnapKit
 
 class DetailsViewController: UIViewController {
     
-    private let scrollView = UIScrollView()
+    // MARK: - Properties
+    
+    private let detailsViewModel = DetailsViewModel()
     private let detailsView = DetailsView()
-    var details: DetailsEntity?
-    var movieId: Int!
+    var movieId: Int?
+    
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundDark
-        view.addSubview(scrollView)
-        scrollView.addSubview(detailsView)
+        view.addSubview(detailsView)
         viewConstraints()
-        favoriteStatus()
+        navigationBarSetup()
+        settingUpOnFavoriteButton()
+        fetchData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+    
+    // MARK: - Setup Constraints
+    
+    func viewConstraints() {
+        detailsView.snp.makeConstraints { make in
+            make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+    
+    // MARK: - Navigation Bar Setup
+    
+    func navigationBarSetup() {
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.tintColor = .primary
+    }
+    
+    // MARK: - Data Request and View Setup
+    
+    func fetchData() {
         Task {
             do {
-                try await getMovieDetailsData(id: movieId)
+                try await detailsViewModel.getMovieDetailsData(id: movieId)
+                if let details = detailsViewModel.details {
+                    setupViewWithData(data: details)
+                }
             } catch {
                 print("Error: \(error)")
             }
         }
-        
     }
     
-    func viewConstraints() {
-        scrollView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
-        }
-        detailsView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-            make.width.equalTo(scrollView.snp.width)
-        }
+    func setupViewWithData(data: DetailsEntity) {
+        detailsView.detailsContentView.updateTexts(with: data)
+        detailsView.imageHeaderView.updateMovieImage(with: data)
+        detailsView.imageHeaderView.updateTexts(with: data)
+        detailsView.imageHeaderView.updateFavorite(with: detailsViewModel.isFavorite(id: movieId))
     }
     
-    func getMovieDetailsData(id: Int) async throws -> Void {
-        
-        let url = URL(string: "https://api.themoviedb.org/3/movie/"+String(id))!
-        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
-        let queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "language", value: "en-US"),
-        ]
-        components.queryItems = components.queryItems.map { $0 + queryItems } ?? queryItems
-        
-        var request = URLRequest(url: components.url!)
-        request.httpMethod = "GET"
-        request.timeoutInterval = 10
-        request.allHTTPHeaderFields = [
-            "accept": "application/json",
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwYjJmZWJmMTk1ZTUyYTdkN2IzYzA1Nzg1NDBlNWE1MSIsIm5iZiI6MTc0OTAwNDI0My43NjcsInN1YiI6IjY4M2ZhZmQzN2Y5NWQzNWMzMTdiYzAyOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zn8rynytkXOjCVRU9l4bmJe4G_QlqdtqoXIVfyolfFE"
-        ]
-        do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            let detailsEntity = try JSONDecoder().decode(DetailsEntity.self, from: data)
-            details = detailsEntity
-            detailsView.detailsContentView.updateView(with: detailsEntity)
-            detailsView.imageHeaderView.updateView(with: detailsEntity)
-            
-        } catch {
-            print("Erro ao decodificar: \(error)")
-        }
-    }
-    
-    func favoriteStatus() {
+    func settingUpOnFavoriteButton() {
         detailsView.imageHeaderView.onFavoriteTapped = { [weak self] in
             guard let self = self else { return }
-            details?.isFavorite.toggle()
-            if let isFavorite = details?.isFavorite {
-            detailsView.imageHeaderView.updateFavorite(with: isFavorite)
+            if let movieId = movieId {
+                let isFavorited = detailsViewModel.isFavorite(id: movieId)
+                detailsView.imageHeaderView.updateFavorite(with: !isFavorited)
+                detailsViewModel.toggleFavorite(id: movieId)
             }
         }
     }

@@ -9,7 +9,7 @@ import Kingfisher
 
 class ImageHeaderView: UIView {
     
-    var details: DetailsEntity?
+    // MARK: - Callback Functions
     
     var onFavoriteTapped: (() -> Void)?
     
@@ -78,7 +78,9 @@ class ImageHeaderView: UIView {
         }
     }
     
-    func updateView(with data: DetailsEntity) {
+    // MARK: - View Update with API Data
+    
+    func updateMovieImage(with data: DetailsEntity) {
         if let path = data.posterPath, let urlPath = URL(string: "https://image.tmdb.org/t/p/w500"+path) {
             let processor = DownsamplingImageProcessor(size: movieImageView.bounds.size)
             |> RoundCornerImageProcessor(cornerRadius: 8)
@@ -93,25 +95,23 @@ class ImageHeaderView: UIView {
                     .cacheOriginalImage
                 ])
         }
+    }
+    
+    func updateTexts(with data: DetailsEntity) {
         movieName.text = data.title
         movieTagline.text = "'\(data.tagline)'"
     }
     
     func updateFavorite(with isFavorite: Bool) {
-        if isFavorite == false {
-            heartImageView.image = UIImage(systemName: "heart")
-            heartImageView.tintColor = .white
-        } else {
-            heartImageView.image = UIImage(systemName: "heart.fill")
-            heartImageView.tintColor = .primary
-        }
+        heartImageView.image = UIImage(systemName: isFavorite ? "heart.fill" : "heart")
+        heartImageView.tintColor = isFavorite ? .primary : .white
     }
     
     //MARK: - Actions
     
     @objc func heartClicked() {
         onFavoriteTapped?()
-        print("favorite")
+        print("isFavorite:")
     }
     
     //MARK: - Setup Constraints

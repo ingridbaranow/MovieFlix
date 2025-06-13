@@ -10,6 +10,11 @@ class DetailsView: UIView {
     
     //MARK: - Components
     
+    lazy var scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        return scrollView
+    }()
+    
     lazy var imageHeaderView: ImageHeaderView = {
         let headerView = ImageHeaderView()
         headerView.layer.cornerRadius = 8
@@ -34,13 +39,17 @@ class DetailsView: UIView {
     }
     
     func addComponents() {
-        addSubview(imageHeaderView)
-        addSubview(detailsContentView)
+        addSubview(scrollView)
+        scrollView.addSubview(imageHeaderView)
+        scrollView.addSubview(detailsContentView)
     }
     
     //MARK: - Setup Constraints
     
     func setupConstraints() {
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         imageHeaderView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
             make.left.equalToSuperview().offset(16)
@@ -55,4 +64,4 @@ class DetailsView: UIView {
         }
     }
 }
-    
+

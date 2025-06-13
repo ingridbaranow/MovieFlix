@@ -40,7 +40,7 @@ class DetailsContentView: UIView {
     
     lazy var movieRuntime: UILabel = {
         let label = UILabel()
-        label.text = "2h 18m"
+        label.text = ""
         label.textColor = .lightGray
         label.font = UIFont(name: .bold, size: .body2)
         return label
@@ -74,7 +74,7 @@ class DetailsContentView: UIView {
     
     lazy var status: UILabel = {
         let label = UILabel()
-        label.text = "Released"
+        label.text = ""
         label.textColor = .primaryText
         label.font = UIFont(name: .regular, size: .body2)
         label.numberOfLines = 1
@@ -92,7 +92,7 @@ class DetailsContentView: UIView {
     
     lazy var originalLanguage: UILabel = {
         let label = UILabel()
-        label.text = "EN"
+        label.text = ""
         label.textColor = .primaryText
         label.font = UIFont(name: .regular, size: .body2)
         label.numberOfLines = 1
@@ -110,7 +110,7 @@ class DetailsContentView: UIView {
     
     lazy var budget: UILabel = {
         let label = UILabel()
-        label.text = "$90.000.000"
+        label.text = ""
         label.textColor = .primaryText
         label.font = UIFont(name: .regular, size: .body2)
         label.numberOfLines = 1
@@ -128,7 +128,7 @@ class DetailsContentView: UIView {
     
     lazy var revenue: UILabel = {
         let label = UILabel()
-        label.text = "$300.000.000"
+        label.text = ""
         label.textColor = .primaryText
         label.font = UIFont(name: .regular, size: .body2)
         label.numberOfLines = 1
@@ -154,12 +154,12 @@ class DetailsContentView: UIView {
         }
     }
     
+    // MARK: - View Update with API Data
+    
     func valueFormater(value: Int) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.groupingSeparator = "."
-        formatter.maximumFractionDigits = 0
-        
         if let valorFormatado = formatter.string(from: NSNumber(value: value)) {
             return "$\(valorFormatado)"
         } else {
@@ -167,7 +167,7 @@ class DetailsContentView: UIView {
         }
     }
     
-    func updateView(with data: DetailsEntity) {
+    func updateTexts(with data: DetailsEntity) {
         let voteAverage = data.voteAverage
         let releaseDate = data.releaseDate
         let language = data.originalLanguage
