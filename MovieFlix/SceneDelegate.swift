@@ -15,14 +15,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let window = UIWindow(windowScene: windowScene)
-        self.window = window
+        tabBarAppearanceSetup()
         
-        let homeVC = HomeViewController()
-        let navigationController = UINavigationController(rootViewController: homeVC)
-        window.rootViewController = navigationController
-        
-        window.makeKeyAndVisible()
+        window = UIWindow(windowScene: windowScene)
+        window?.rootViewController = createTabBarController()
+        window?.makeKeyAndVisible()
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -55,7 +52,39 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
-    
-    
 }
 
+extension SceneDelegate {
+    
+    func createTabBarController() -> UITabBarController {
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = [
+            createNavController(for: HomeViewController(), title: "Home", imageName: "house"),
+            createNavController(for: FavoritesViewController(), title: "Favorites", imageName: "heart")
+        ]
+        return tabBarController
+    }
+    
+    func createNavController(for rootViewController: UIViewController, title: String, imageName: String) -> UINavigationController {
+        let navController = UINavigationController(rootViewController: rootViewController)
+        navController.tabBarItem.title = title
+        navController.tabBarItem.image = UIImage(systemName: imageName)
+        rootViewController.title = title
+        return navController
+    }
+    
+    func tabBarAppearanceSetup() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .black
+        
+        appearance.stackedLayoutAppearance.selected.iconColor = .primary
+        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: UIColor.primary]
+        
+        appearance.stackedLayoutAppearance.normal.iconColor = .white
+        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
+
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+}
