@@ -9,7 +9,7 @@ import Kingfisher
 
 class MovieCell: UICollectionViewCell {
     
-    var homeEntity: HomeResponse?
+    // MARK: - Callback Functions
     
     var onFavoriteTapped: (() -> Void)?
     
@@ -89,9 +89,16 @@ class MovieCell: UICollectionViewCell {
         }
     }
     
-    func updateCell(with movie: MovieEntity) {
+    // MARK: - View Update with API Data
+    
+    func updateTexts(with movie: MovieEntity) {
         let voteAverage = movie.voteAverage
         let releaseDate = movie.releaseDate
+        movieStars.text = String(format: "%.1f", voteAverage)
+        movieYear.text = String(releaseDate.prefix(4))
+    }
+    
+    func updateMovieImage(with movie: MovieEntity) {
         if let path = movie.posterPath, let urlPath = URL(string: "https://image.tmdb.org/t/p/w500"+path) {
             let processor = DownsamplingImageProcessor(size: movieImageView.bounds.size)
             |> RoundCornerImageProcessor(cornerRadius: 8)
@@ -106,23 +113,17 @@ class MovieCell: UICollectionViewCell {
                     .cacheOriginalImage
                 ])
         }
-        movieStars.text = String(format: "%.1f", voteAverage)
-        movieYear.text = String(releaseDate.prefix(4))
-        
-        if movie.isFavorite == false {
-            heartImageView.image = UIImage(systemName: "heart")
-            heartImageView.tintColor = .white
-        } else {
-            heartImageView.image = UIImage(systemName: "heart.fill")
-            heartImageView.tintColor = .primary
-        }
+    }
+    
+    func updateFavorite(with isFavorite: Bool) {
+        heartImageView.image = UIImage(systemName: isFavorite ? "heart.fill" : "heart")
+        heartImageView.tintColor = isFavorite ? .primary : .white
     }
     
     //MARK: - Actions
     
     @objc func heartClicked() {
         onFavoriteTapped?()
-        print("favorite")
     }
     
     //MARK: - Constraints

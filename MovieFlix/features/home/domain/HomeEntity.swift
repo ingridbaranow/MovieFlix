@@ -6,7 +6,6 @@
 import Foundation
 
 struct HomeResponse: Codable {
-    let page: Int
     let results: [MovieEntity]
 }
 
@@ -17,7 +16,6 @@ struct MovieEntity: Codable {
     let releaseDate: String
     let title: String
     let voteAverage: Double
-    var isFavorite: Bool = false
     
     enum CodingKeys: String, CodingKey {
         case id

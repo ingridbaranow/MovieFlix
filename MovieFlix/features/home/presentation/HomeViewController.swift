@@ -7,21 +7,62 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
+    // MARK: - Properties
+    
+    private let homeViewModel = HomeViewModel()
     private let homeView = HomeView()
-    var filmes: [MovieEntity] = []
-    var response: HomeResponse?
-    var page: Int = 1
     var isPageRefreshing: Bool = false
+    
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .backgroundDark
         view.addSubview(homeView)
         viewConstraints()
+        navigationBarSetup()
         collectionViewDelegate()
+        fetchData()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        homeView.collectionView.reloadData()
+    }
+    
+    // MARK: - Setup Constraints
+    
+    func viewConstraints() {
+        homeView.snp.makeConstraints { make in
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview()
+        }
+    }
+    
+    // MARK: - Navigation Bar Setup
+    
+    func navigationBarSetup() {
+        title = "MovieFlix"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .inline
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .backgroundDark
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.primary]
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.primary]
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+    }
+    
+    // MARK: - Data Request and View Setup
+    
+    func fetchData() {
         Task {
             do {
-                try await getMovieListData()
+                try await homeViewModel.getMovieListData()
+                homeView.collectionView.reloadData()
             } catch {
                 print("Error: \(error)")
             }
@@ -35,68 +76,31 @@ class HomeViewController: UIViewController {
         
         if position > contentHeight - frameHeight * 1.3, !isPageRefreshing {
             isPageRefreshing = true
-            page += 1
+            homeViewModel.incrementPage()
             Task {
                 do {
-                    try await getMovieListData()
+                    try await homeViewModel.getMovieListData()
+                    homeView.collectionView.reloadData()
+                    isPageRefreshing = false
                 } catch {
                     print("Error: \(error)")
                 }
             }
         }
     }
-    
-    func getMovieListData() async throws -> Void {
-        let url = URL(string: "https://api.themoviedb.org/3/movie/popular")!
-        var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
-        let mypage = String(page)
-        let queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "language", value: "en-US"),
-            URLQueryItem(name: "page", value: mypage),
-        ]
-        components.queryItems = components.queryItems.map { $0 + queryItems } ?? queryItems
-        
-        var request = URLRequest(url: components.url!)
-        request.httpMethod = "GET"
-        request.timeoutInterval = 10
-        request.allHTTPHeaderFields = [
-            "accept": "application/json",
-            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIwYjJmZWJmMTk1ZTUyYTdkN2IzYzA1Nzg1NDBlNWE1MSIsIm5iZiI6MTc0OTAwNDI0My43NjcsInN1YiI6IjY4M2ZhZmQzN2Y5NWQzNWMzMTdiYzAyOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.zn8rynytkXOjCVRU9l4bmJe4G_QlqdtqoXIVfyolfFE"
-        ]
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            let homeResponse = try JSONDecoder().decode(HomeResponse.self, from: data)
-            if page == 1 {
-                filmes = homeResponse.results
-            } else {
-                filmes.append(contentsOf: homeResponse.results)
-            }
-            DispatchQueue.main.async {
-                self.homeView.collectionView.reloadData()
-                self.isPageRefreshing = false
-            }
-        } catch {
-            print("Erro ao decodificar: \(error)")
-        }
-    }
-    
-    func viewConstraints() {
-        homeView.snp.makeConstraints { make in
-            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.leading.trailing.equalToSuperview()
-        }
-    }
 }
 
-//MARK: - TableView
 
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    //MARK: - CollectionView Delegate
     
     func collectionViewDelegate() {
         homeView.collectionView.delegate = self
         homeView.collectionView.dataSource = self
     }
+    
+    //MARK: - CollectionView HeaderSection
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
@@ -106,7 +110,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         if section == 0 {
             return 1
         } else {
-            return max(filmes.count - 1, 0)
+            return max(homeViewModel.filmes.count - 1, 0)
         }
     }
     
@@ -120,51 +124,13 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return header
     }
     
+    //MARK: - CollectionView Layouts
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         if section == 0 {
             return CGSize(width: collectionView.bounds.width, height: 0)
         } else {
             return CGSize(width: collectionView.bounds.width, height: 45)
-        }
-        
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if indexPath.section == 0 {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
-            if let firstMovie = filmes.first {
-                cell.updateCell(with: firstMovie)
-            }
-            
-            cell.onFavoriteTapped = { [weak self] in
-                guard let self = self else { return }
-                self.filmes[0].isFavorite.toggle()
-                self.homeView.collectionView.reloadItems(at: [indexPath])
-            }
-            
-            cell.onDetailsTapped = { [weak self] in
-                var selectedMovie: MovieEntity?
-                if indexPath.section == 0 {
-                    selectedMovie = self?.filmes.first
-                }
-                guard let movie = selectedMovie else { return }
-                let detailsVC = DetailsViewController()
-                detailsVC.movieId = movie.id
-                self?.navigationController?.pushViewController(detailsVC, animated: true)
-            }
-            
-            return cell
-        } else {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCell", for: indexPath) as! MovieCell
-            cell.updateCell(with: filmes[indexPath.row + 1])
-            
-            cell.onFavoriteTapped = { [weak self] in
-                guard let self = self else { return }
-                let index = indexPath.row + 1
-                self.filmes[index].isFavorite.toggle()
-                self.homeView.collectionView.reloadItems(at: [indexPath])
-            }
-            return cell
         }
     }
     
@@ -179,15 +145,65 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
     }
     
+    //MARK: - CollectionView DataSource
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if indexPath.section == 0 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HeaderCell", for: indexPath) as! HeaderCell
+            if let firstMovie = homeViewModel.filmes.first {
+                cell.updateMovieImage(with: firstMovie)
+                cell.updateTexts(with: firstMovie)
+                cell.updateFavorite(with: homeViewModel.isFavorite(id: firstMovie.id))
+            }
+            
+            cell.onFavoriteTapped = { [weak self] in
+                guard let self = self else { return }
+                let movieId = self.homeViewModel.filmes[0].id
+                let isFavorited = homeViewModel.isFavorite(id: movieId)
+                cell.updateFavorite(with: !isFavorited)
+                homeViewModel.toggleFavorite(id: movieId)
+                self.homeView.collectionView.reloadItems(at: [indexPath])
+            }
+            
+            cell.onDetailsTapped = { [weak self] in
+                var selectedMovie: MovieEntity?
+                if indexPath.section == 0 {
+                    selectedMovie = self?.homeViewModel.filmes.first
+                }
+                guard let movie = selectedMovie else { return }
+                let detailsVC = DetailsViewController()
+                detailsVC.movieId = movie.id
+                self?.navigationController?.pushViewController(detailsVC, animated: true)
+            }
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCell", for: indexPath) as! MovieCell
+            cell.updateMovieImage(with: homeViewModel.filmes[indexPath.row + 1])
+            cell.updateTexts(with: homeViewModel.filmes[indexPath.row + 1])
+            cell.updateFavorite(with: homeViewModel.isFavorite(id: homeViewModel.filmes[indexPath.row + 1].id))
+            
+            cell.onFavoriteTapped = { [weak self] in
+                guard let self = self else { return }
+                let index = indexPath.row + 1
+                let movieId = self.homeViewModel.filmes[index].id
+                let isFavorited = homeViewModel.isFavorite(id: movieId)
+                cell.updateFavorite(with: !isFavorited)
+                homeViewModel.toggleFavorite(id: movieId)
+                self.homeView.collectionView.reloadItems(at: [indexPath])
+            }
+            return cell
+        }
+    }
+    
+    //MARK: - Navigation to DetailsViewController
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("selected")
-        
         var selectedMovie: MovieEntity?
         
         if indexPath.section == 0 {
-            selectedMovie = filmes.first
+            selectedMovie = homeViewModel.filmes.first
         } else {
-            selectedMovie = filmes[indexPath.item + 1]
+            selectedMovie = homeViewModel.filmes[indexPath.item + 1]
         }
         
         guard let movie = selectedMovie else { return }

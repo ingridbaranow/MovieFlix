@@ -9,6 +9,8 @@ import Kingfisher
 
 class HeaderCell: UICollectionViewCell {
     
+    // MARK: - Callback Functions
+    
     var onFavoriteTapped: (() -> Void)?
     var onDetailsTapped: (() -> Void)?
     
@@ -96,9 +98,18 @@ class HeaderCell: UICollectionViewCell {
         }
     }
     
-    func updateCell(with movie: MovieEntity) {
+    // MARK: - View Update with API Data
+    
+    func updateTexts(with movie: MovieEntity) {
         let voteAverage = movie.voteAverage
         let releaseDate = movie.releaseDate
+        movieName.text = movie.title
+        movieDescription.text = movie.overview
+        movieStars.text = String(format: "%.1f", voteAverage)
+        movieYear.text = String(releaseDate.prefix(4))
+    }
+    
+    func updateMovieImage(with movie: MovieEntity) {
         if let path = movie.posterPath, let urlPath = URL(string: "https://image.tmdb.org/t/p/w500"+path) {
             let processor = DownsamplingImageProcessor(size: hypeMovieImageView.bounds.size)
             |> RoundCornerImageProcessor(cornerRadius: 8)
@@ -113,11 +124,10 @@ class HeaderCell: UICollectionViewCell {
                     .cacheOriginalImage
                 ])
         }
-        movieName.text = movie.title
-        movieDescription.text = movie.overview
-        movieStars.text = String(format: "%.1f", voteAverage)
-        movieYear.text = String(releaseDate.prefix(4))
-        if movie.isFavorite == false {
+    }
+    
+    func updateFavorite(with isFavorite: Bool) {
+        if isFavorite == false {
             addToFavoritesButton.socialImage.image = UIImage(systemName: "heart")
         } else {
             addToFavoritesButton.socialImage.image = UIImage(systemName: "heart.fill")
@@ -128,13 +138,10 @@ class HeaderCell: UICollectionViewCell {
     
     @objc func addToFavoritesTapped(){
         onFavoriteTapped?()
-        print("add to favorite")
     }
     
     @objc func detailsTapped(){
         onDetailsTapped?()
-        print("details")
-        
     }
     
     //MARK: - Setup Constraints
