@@ -17,6 +17,7 @@ class DefaultSearchBar: UIView {
         searchBar.layer.borderWidth = 1
         searchBar.layer.borderColor = UIColor.gray.cgColor
         searchBar.autocapitalizationType = .words
+        searchBar.showsCancelButton = true
         return searchBar
     }()
     
@@ -25,9 +26,10 @@ class DefaultSearchBar: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addViews()
-        setupConstrains()
         setupTextField()
         setupIcon()
+        setupCancelButton()
+        setupConstrains()
     }
     
     required init?(coder: NSCoder) {
@@ -39,13 +41,13 @@ class DefaultSearchBar: UIView {
     }
     
     // MARK: - Setups
-
+    
     func setupTextField() {
         if let textField = searchBar.value(forKey: "searchField") as? UITextField {
             textField.textColor = .primaryText
             textField.font = UIFont(name: .regular, size: .body3)
-            textField.attributedPlaceholder = NSAttributedString(string: "Search movies...", attributes: [NSAttributedString.Key.foregroundColor: UIColor.primary])
-        
+            textField.attributedPlaceholder = NSAttributedString(string: "Search movies", attributes: [NSAttributedString.Key.foregroundColor: UIColor.primary])
+            
             for subview in textField.subviews {
                 if subview.description.contains("Background") {
                     subview.removeFromSuperview()
@@ -58,6 +60,14 @@ class DefaultSearchBar: UIView {
         if let textField = searchBar.value(forKey: "searchField") as? UITextField,
            let leftIcon = textField.leftView as? UIImageView {
             leftIcon.tintColor = .primary
+        }
+    }
+    
+    func setupCancelButton() {
+        if let cancelButton = searchBar.value(forKey: "cancelButton") as? UIButton {
+            cancelButton.setTitleColor(.primary, for: .normal)
+            cancelButton.titleLabel?.font = UIFont(name: .regular, size: .body3)
+            cancelButton.setTitle("Cancel", for: .normal)
         }
     }
     
