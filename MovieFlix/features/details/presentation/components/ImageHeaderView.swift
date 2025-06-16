@@ -58,7 +58,6 @@ class ImageHeaderView: UIView {
         return label
     }()
     
-    
     //MARK: - Initialization
     
     override init(frame: CGRect) {

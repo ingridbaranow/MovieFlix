@@ -1,9 +1,7 @@
-//
 //  DetailsViewController.swift
 //  MovieFlix
 //
 //  Created by Ingrid Baranow on 05/06/25.
-//
 
 import UIKit
 import SnapKit

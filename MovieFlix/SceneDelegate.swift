@@ -1,9 +1,7 @@
-//
 //  SceneDelegate.swift
 //  MovieFlix
 //
 //  Created by Ingrid Baranow on 30/05/25.
-//
 
 import UIKit
 

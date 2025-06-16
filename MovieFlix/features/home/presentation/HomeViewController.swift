@@ -58,27 +58,22 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
     }
     
-    //MARK: - SearchBar Setups
+    //MARK: - SearchBar Search Setups
     
     func searchBarDelegate() {
         homeView.searchBar.searchBar.delegate = self
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        guard let query = searchBar.text, !query.isEmpty else { return }
-        Task {
-            do {
-                homeViewModel.isSearching = true
-                homeViewModel.searchedMovies = []
-                try await homeViewModel.searchMovie(query: query)
-                homeView.collectionView.reloadData()
-            } catch {
-                print("Error: \(error)")
-            }
-        }
+        searchMovies(searchBar: homeView.searchBar.searchBar)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchMovies(searchBar: homeView.searchBar.searchBar)
+        searchBar.resignFirstResponder()
+    }
+    
+    func searchMovies(searchBar: UISearchBar) {
         guard let query = searchBar.text, !query.isEmpty else { return }
         Task {
             do {
@@ -90,7 +85,6 @@ class HomeViewController: UIViewController, UISearchBarDelegate {
                 print("Error: \(error)")
             }
         }
-        searchBar.resignFirstResponder()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
@@ -150,7 +144,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         homeView.collectionView.dataSource = self
     }
     
-    //MARK: - CollectionView HeaderSection
+    //MARK: - CollectionView Section
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return homeViewModel.isSearching ?  1 : 2
@@ -167,7 +161,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
             }
         }
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
@@ -233,6 +226,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
                 self.homeView.collectionView.reloadItems(at: [indexPath])
             }
             return cell
+            
         } else {
             if indexPath.section == 0 {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HeaderCell", for: indexPath) as! HeaderCell

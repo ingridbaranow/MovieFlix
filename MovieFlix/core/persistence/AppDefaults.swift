@@ -12,21 +12,19 @@ class AppDefaults {
     static func addFavorite(id: Int) {
         UserDefaults.standard.set(true, forKey: "FavoritedId: \(id)")
         
-        var currentFavoriteList = UserDefaults.standard.array(forKey: "ListOfIds") as? [Int] ?? []
+        currentFavoriteList = UserDefaults.standard.array(forKey: "ListOfIds") as? [Int] ?? []
         if !currentFavoriteList.contains(id) {
             currentFavoriteList.append(id)
             UserDefaults.standard.set(currentFavoriteList, forKey: "ListOfIds")
-            print("IDs salvos: \(currentFavoriteList)")
         }
     }
     
     static func removeFavorite(id: Int) {
         UserDefaults.standard.set(false, forKey: "FavoritedId: \(id)")
         
-        var currentFavoriteList = UserDefaults.standard.array(forKey: "ListOfIds") as? [Int] ?? []
+        currentFavoriteList = UserDefaults.standard.array(forKey: "ListOfIds") as? [Int] ?? []
         currentFavoriteList.removeAll { $0 == id }
         UserDefaults.standard.set(currentFavoriteList, forKey: "ListOfIds")
-        print("Lista: \(currentFavoriteList)")
     }
     
     static func isAlredyFavorited(id: Int) -> Bool {

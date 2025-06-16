@@ -5,9 +5,9 @@
 
 import Foundation
 
-private let homeDataSource = HomeDataSource()
-
 class HomeViewModel {
+    
+    private let homeDataSource = HomeDataSource()
     
     var page: Int = 1
     var popularMovies: [MovieEntity] = []
