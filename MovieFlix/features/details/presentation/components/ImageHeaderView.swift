@@ -94,12 +94,19 @@ class ImageHeaderView: UIView {
                     .transition(.fade(1)),
                     .cacheOriginalImage
                 ])
+        } else {
+            movieImageView.image = UIImage(named: "noPoster")
         }
     }
     
     func updateTexts(with data: DetailsEntity) {
         movieName.text = data.title
-        movieTagline.text = "'\(data.tagline)'"
+        
+        if data.tagline == "" {
+            movieTagline.text = ""
+        } else {
+            movieTagline.text = "'\(data.tagline)'"
+        }
     }
     
     func updateFavorite(with isFavorite: Bool) {
@@ -123,8 +130,8 @@ class ImageHeaderView: UIView {
             make.size.equalTo(CGSize(width: 360, height: 360))
         }
         heartBackgroundView.snp.makeConstraints { make in
-            make.top.equalTo(movieImageView.snp.top).offset(16)
-            make.right.equalTo(movieImageView.snp.right).inset(16)
+            make.top.equalTo(movieImageView.snp.top).offset(Int.s2)
+            make.right.equalTo(movieImageView.snp.right).inset(Int.s2)
             make.size.equalTo(CGSize(width: 50, height: 50))
         }
         heartImageView.snp.makeConstraints { make in
@@ -133,12 +140,12 @@ class ImageHeaderView: UIView {
         }
         movieName.snp.makeConstraints { make in
             make.top.equalTo(movieImageView.snp.top).offset(292)
-            make.left.equalTo(movieImageView.snp.left).offset(8)
+            make.left.equalTo(movieImageView.snp.left).offset(Int.xs)
             make.width.lessThanOrEqualTo(340)
         }
         movieTagline.snp.makeConstraints { make in
-            make.top.equalTo(movieName.snp.bottom).offset(8)
-            make.left.equalTo(movieImageView.snp.left).offset(8)
+            make.top.equalTo(movieName.snp.bottom).offset(Int.xs)
+            make.left.equalTo(movieImageView.snp.left).offset(Int.xs)
             make.width.lessThanOrEqualTo(330)
         }
     }

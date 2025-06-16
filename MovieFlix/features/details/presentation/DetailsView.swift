@@ -51,14 +51,14 @@ class DetailsView: UIView {
             make.edges.equalToSuperview()
         }
         imageHeaderView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
-            make.left.equalToSuperview().offset(16)
+            make.top.equalToSuperview().offset(Int.s2)
+            make.left.equalToSuperview().offset(Int.s2)
             make.height.equalTo(360)
             make.width.equalTo(360)
         }
         detailsContentView.snp.makeConstraints { make in
-            make.top.equalTo(imageHeaderView.snp.bottom).offset(24)
-            make.left.equalToSuperview().offset(8)
+            make.top.equalTo(imageHeaderView.snp.bottom).offset(Int.m2)
+            make.left.equalToSuperview().offset(Int.xs)
             make.width.equalTo(360)
             make.bottom.equalToSuperview()
         }

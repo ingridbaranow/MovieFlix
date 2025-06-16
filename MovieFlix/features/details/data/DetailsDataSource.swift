@@ -7,10 +7,10 @@ import Foundation
 
 class DetailsDataSource {
     
-    let baseUrl = "https://api.themoviedb.org/3/movie/"
+    let baseUrl = "https://api.themoviedb.org/3/"
     
     func getMovieDetailsData(id: Int) async throws -> DetailsEntity? {
-        let endPoint = String(id)
+        let endPoint = "movie/"+String(id)
         let url = URL(string: baseUrl+endPoint)!
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         let queryItems: [URLQueryItem] = [
@@ -27,14 +27,14 @@ class DetailsDataSource {
                 "Authorization": apiToken
             ]
         } else {
-            print("error: API Token not found")
+            print("Error: API Token not found")
         }
         
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
             return try JSONDecoder().decode(DetailsEntity.self, from: data)
         } catch {
-            print("Erro ao decodificar: \(error)")
+            print("Error by decoding JSON: \(error)")
             return nil
         }
     }

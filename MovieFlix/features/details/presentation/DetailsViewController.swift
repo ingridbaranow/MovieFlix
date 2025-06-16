@@ -63,7 +63,7 @@ class DetailsViewController: UIViewController {
                     setupViewWithData(data: details)
                 }
             } catch {
-                print("Error: \(error)")
+                print("Error by fetching data: \(error)")
             }
         }
     }

@@ -14,7 +14,7 @@ class DetailsViewModel {
         if let id = id {
             details = try await detailsDataSource.getMovieDetailsData(id: id)
         } else {
-            print("error")
+            print("Error: ID is nil. Not possible to get movie details.")
         }
     }
     

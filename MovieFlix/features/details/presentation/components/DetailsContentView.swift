@@ -175,6 +175,18 @@ class DetailsContentView: UIView {
         let budgetFormatted = valueFormater(value: data.budget)
         let revenueFormatted = valueFormater(value: data.revenue)
         
+        if data.budget == 0 {
+            budget.text = "value not declared"
+        } else {
+            budget.text = budgetFormatted
+        }
+        
+        if data.revenue == 0 {
+            revenue.text = "value not declared"
+        } else {
+            revenue.text = revenueFormatted
+        }
+        
         movieStars.text = String(format: "%.1f", voteAverage)
         numberOfVotes.text = "(\(data.voteCount) votes)"
         movieYear.text = String(releaseDate.prefix(4))
@@ -182,8 +194,6 @@ class DetailsContentView: UIView {
         movieDescription.text = data.overview
         originalLanguage.text = languageUppercased
         status.text = data.status
-        budget.text = budgetFormatted
-        revenue.text = revenueFormatted
     }
     
     //MARK: - Setup Constraints
@@ -191,75 +201,75 @@ class DetailsContentView: UIView {
     func setupConstraints() {
         starSymbol.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(15)
-            make.left.equalToSuperview().offset(8)
+            make.left.equalToSuperview().offset(Int.xs)
             make.size.equalTo(CGSize(width: 18, height: 18))
         }
         movieStars.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
-            make.left.equalTo(starSymbol.snp.right).offset(4)
+            make.top.equalToSuperview().offset(Int.s2)
+            make.left.equalTo(starSymbol.snp.right).offset(Int.quark)
         }
         numberOfVotes.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
-            make.left.equalTo(movieStars.snp.right).offset(8)
+            make.top.equalToSuperview().offset(Int.s2)
+            make.left.equalTo(movieStars.snp.right).offset(Int.xs)
         }
         movieYear.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
-            make.left.equalTo(numberOfVotes.snp.right).offset(16)
+            make.top.equalToSuperview().offset(Int.s2)
+            make.left.equalTo(numberOfVotes.snp.right).offset(Int.s2)
         }
         movieRuntime.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
-            make.left.equalTo(movieYear.snp.right).offset(16)
+            make.top.equalToSuperview().offset(Int.s2)
+            make.left.equalTo(movieYear.snp.right).offset(Int.s2)
         }
         movieDescription.snp.makeConstraints { make in
-            make.top.equalTo(movieStars.snp.bottom).offset(8)
+            make.top.equalTo(movieStars.snp.bottom).offset(Int.xs)
             make.left.equalTo(starSymbol.snp.left)
             make.width.lessThanOrEqualTo(330)
         }
         movieDetailsTitle.snp.makeConstraints { make in
-            make.top.equalTo(movieDescription.snp.bottom).offset(24)
-            make.left.equalToSuperview().offset(8)
+            make.top.equalTo(movieDescription.snp.bottom).offset(Int.m2)
+            make.left.equalToSuperview().offset(Int.xs)
             make.height.equalTo(26)
             make.width.lessThanOrEqualTo(360)
         }
         statusTitle.snp.makeConstraints { make in
-            make.top.equalTo(movieDetailsTitle.snp.bottom).offset(20)
+            make.top.equalTo(movieDetailsTitle.snp.bottom).offset(Int.m1)
             make.left.equalTo(movieDetailsTitle.snp.left)
             make.height.equalTo(16)
         }
         status.snp.makeConstraints { make in
-            make.top.equalTo(movieDetailsTitle.snp.bottom).offset(20)
-            make.left.equalTo(statusTitle.snp.right).offset(8)
+            make.top.equalTo(movieDetailsTitle.snp.bottom).offset(Int.m1)
+            make.left.equalTo(statusTitle.snp.right).offset(Int.xs)
             make.height.equalTo(16)
         }
         originalLanguageTitle.snp.makeConstraints { make in
-            make.top.equalTo(statusTitle.snp.bottom).offset(16)
+            make.top.equalTo(statusTitle.snp.bottom).offset(Int.s2)
             make.left.equalTo(statusTitle.snp.left)
             make.height.equalTo(16)
         }
         originalLanguage.snp.makeConstraints { make in
-            make.top.equalTo(statusTitle.snp.bottom).offset(16)
-            make.left.equalTo(originalLanguageTitle.snp.right).offset(8)
+            make.top.equalTo(statusTitle.snp.bottom).offset(Int.s2)
+            make.left.equalTo(originalLanguageTitle.snp.right).offset(Int.xs)
             make.height.equalTo(16)
         }
         budgetTitle.snp.makeConstraints { make in
-            make.top.equalTo(originalLanguageTitle.snp.bottom).offset(16)
+            make.top.equalTo(originalLanguageTitle.snp.bottom).offset(Int.s2)
             make.left.equalTo(originalLanguageTitle.snp.left)
             make.height.equalTo(16)
         }
         budget.snp.makeConstraints { make in
-            make.top.equalTo(originalLanguageTitle.snp.bottom).offset(16)
-            make.left.equalTo(budgetTitle.snp.right).offset(8)
+            make.top.equalTo(originalLanguageTitle.snp.bottom).offset(Int.s2)
+            make.left.equalTo(budgetTitle.snp.right).offset(Int.xs)
             make.height.equalTo(16)
         }
         revenueTitle.snp.makeConstraints { make in
-            make.top.equalTo(budgetTitle.snp.bottom).offset(16)
+            make.top.equalTo(budgetTitle.snp.bottom).offset(Int.s2)
             make.left.equalTo(budgetTitle.snp.left)
             make.height.equalTo(16)
             make.bottom.equalToSuperview()
         }
         revenue.snp.makeConstraints { make in
-            make.top.equalTo(budgetTitle.snp.bottom).offset(16)
-            make.left.equalTo(revenueTitle.snp.right).offset(8)
+            make.top.equalTo(budgetTitle.snp.bottom).offset(Int.s2)
+            make.left.equalTo(revenueTitle.snp.right).offset(Int.xs)
             make.height.equalTo(16)
             make.bottom.equalToSuperview()
         }
