@@ -13,12 +13,11 @@ class FavoritesViewModel {
     func getFavoritesListData() async throws -> Void {
         favorites = []
         let ids = AppDefaults.getAllFavorites()
-        
         for id in ids {
-            if let movie = try? await favoritesDataSource.getFavoritesListData(id: id) {
+            if let movie = try await favoritesDataSource.getFavoritesListData(id: id) {
                 favorites.append(movie)
             } else {
-                print("error")
+                print("Error: Movie not added to favorites.")
             }
         }
     }

@@ -37,7 +37,7 @@ class FavoritesViewController: UIViewController {
                 try await favoritesViewModel.getFavoritesListData()
                 favoritesView.collectionView.reloadData()
             } catch {
-                print("Error: \(error)")
+                print("Error by fetching data: \(error)")
             }
         }
     }

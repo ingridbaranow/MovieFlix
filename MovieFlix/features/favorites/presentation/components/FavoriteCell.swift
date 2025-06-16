@@ -60,7 +60,7 @@ class FavoriteCell: UICollectionViewCell {
     lazy var movieYear: UILabel = {
         let label = UILabel()
         label.textColor = .primaryText
-        label.font = UIFont(name: .regular, size: .body2)
+        label.font = UIFont(name: .bold, size: .body2)
         return label
     }()
     
@@ -138,16 +138,14 @@ class FavoriteCell: UICollectionViewCell {
     
     @objc func heartClicked() {
         onFavoriteTapped?()
-        print("not favorite")
     }
     
     //MARK: - Constraints
     
     func setupConstraints() {
         movieImageView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(8)
+            make.top.equalToSuperview().offset(Int.xs)
             make.left.right.equalToSuperview()
-            
         }
         labelView.snp.makeConstraints { make in
             make.top.equalTo(movieImageView.snp.bottom)
@@ -158,13 +156,13 @@ class FavoriteCell: UICollectionViewCell {
         }
         movieName.snp.makeConstraints { make in
             make.center.equalTo(labelView)
-            make.left.equalTo(labelView.snp.left).offset(8)
-            make.right.equalTo(labelView.snp.right).inset(8)
+            make.left.equalTo(labelView.snp.left).offset(Int.xs)
+            make.right.equalTo(labelView.snp.right).inset(Int.xs)
             make.height.equalTo(16)
         }
         heartBackgroundView.snp.makeConstraints { make in
-            make.top.equalTo(movieImageView.snp.top).offset(8)
-            make.right.equalTo(movieImageView.snp.right).inset(8)
+            make.top.equalTo(movieImageView.snp.top).offset(Int.xs)
+            make.right.equalTo(movieImageView.snp.right).inset(Int.xs)
             make.size.equalTo(CGSize(width: 33, height: 33))
         }
         heartImageView.snp.makeConstraints { make in
@@ -173,16 +171,16 @@ class FavoriteCell: UICollectionViewCell {
         }
         starSymbol.snp.makeConstraints { make in
             make.bottom.equalTo(movieImageView.snp.bottom).inset(15)
-            make.left.equalTo(movieImageView.snp.left).offset(16)
+            make.left.equalTo(movieImageView.snp.left).offset(Int.s2)
             make.size.equalTo(CGSize(width: 20, height: 20))
         }
         movieStars.snp.makeConstraints { make in
             make.bottom.equalTo(movieImageView.snp.bottom).inset(14)
-            make.left.equalTo(starSymbol.snp.right).offset(4)
+            make.left.equalTo(starSymbol.snp.right).offset(Int.quark)
         }
         movieYear.snp.makeConstraints { make in
             make.bottom.equalTo(movieImageView.snp.bottom).inset(14)
-            make.right.equalTo(movieImageView.snp.right).inset(16)
+            make.right.equalTo(movieImageView.snp.right).inset(Int.s2)
         }
     }
 }

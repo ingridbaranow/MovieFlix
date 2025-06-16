@@ -49,8 +49,8 @@ class FavoritesView: UIView {
     func setupConstraints() {
         collectionView.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.left.equalToSuperview().offset(12)
-            make.right.equalToSuperview().inset(12)
+            make.left.equalToSuperview().offset(Int.s1)
+            make.right.equalToSuperview().inset(Int.s1)
             make.bottom.equalToSuperview()
         }
     }
