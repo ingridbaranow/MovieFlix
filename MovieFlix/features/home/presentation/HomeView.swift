@@ -57,13 +57,13 @@ class HomeView: UIView {
     func setupConstraints() {
         searchBar.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(16)
+            make.top.equalToSuperview().offset(Int.s2)
             make.size.equalTo(CGSize(width: 360, height: 40))
         }
         collectionView.snp.makeConstraints { make in
-            make.top.equalTo(searchBar.snp.bottom).offset(16)
-            make.left.equalToSuperview().offset(12)
-            make.right.equalToSuperview().inset(12)
+            make.top.equalTo(searchBar.snp.bottom).offset(Int.s2)
+            make.left.equalToSuperview().offset(Int.s1)
+            make.right.equalToSuperview().inset(Int.s1)
             make.bottom.equalToSuperview()
         }
     }

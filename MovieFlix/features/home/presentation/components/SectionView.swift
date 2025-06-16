@@ -15,7 +15,6 @@ class SectionView: UICollectionReusableView {
         movieCategory.textColor = .primaryText
         movieCategory.font = UIFont(name: .bold, size: .headline3)
         movieCategory.numberOfLines = 1
-        movieCategory.text = "Popular Movies"
         return movieCategory
     }()
     
@@ -45,8 +44,8 @@ class SectionView: UICollectionReusableView {
     
     func setupConstraints() {
         movieCategory.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(8)
-            make.left.equalToSuperview().offset(16)
+            make.top.equalToSuperview().offset(Int.xs)
+            make.left.equalToSuperview().offset(Int.s2)
             make.bottom.equalToSuperview()
         }
     }

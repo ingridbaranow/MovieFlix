@@ -10,16 +10,26 @@ private let homeDataSource = HomeDataSource()
 class HomeViewModel {
     
     var page: Int = 1
-    var filmes: [MovieEntity] = []
-    var filme: MovieEntity?
+    var popularMovies: [MovieEntity] = []
+    var searchedMovies: [MovieEntity] = []
+    var isSearching: Bool = false
     
     func getMovieListData() async throws -> Void {
         guard let movies = try await homeDataSource.getMovieListData(page: page) else {return}
         if page > 1 {
-            filmes.append(contentsOf: movies)
+            popularMovies.append(contentsOf: movies)
             return
         }
-        filmes = movies
+        popularMovies = movies
+    }
+    
+    func searchMovie(query: String) async throws -> Void {
+        guard let movies = try await homeDataSource.searchMovie(query: query, page: page) else {return}
+        if page > 1 {
+            searchedMovies.append(contentsOf: movies)
+            return
+        }
+        searchedMovies = movies
     }
     
     func incrementPage() {

@@ -149,42 +149,42 @@ class HeaderCell: UICollectionViewCell {
     func setupConstraints() {
         hypeMovieImageView.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(16)
+            make.top.equalToSuperview().offset(Int.s2)
             make.width.equalTo(360)
             make.bottom.equalToSuperview()
         }
         movieName.snp.makeConstraints { make in
             make.top.equalTo(hypeMovieImageView.snp.top).offset(190)
-            make.left.equalTo(hypeMovieImageView.snp.left).offset(16)
+            make.left.equalTo(hypeMovieImageView.snp.left).offset(Int.s2)
             make.width.lessThanOrEqualTo(340)
         }
         movieDescription.snp.makeConstraints { make in
-            make.top.equalTo(movieName.snp.bottom).offset(8)
+            make.top.equalTo(movieName.snp.bottom).offset(Int.xs)
             make.left.equalTo(movieName.snp.left)
             make.width.lessThanOrEqualTo(330)
         }
         starSymbol.snp.makeConstraints { make in
-            make.top.equalTo(movieDescription.snp.bottom).offset(16)
+            make.top.equalTo(movieDescription.snp.bottom).offset(Int.s2)
             make.left.equalTo(movieDescription.snp.left)
             make.size.equalTo(CGSize(width: 20, height: 20))
         }
         movieStars.snp.makeConstraints { make in
             make.top.equalTo(movieDescription.snp.bottom).offset(18)
-            make.left.equalTo(starSymbol.snp.right).offset(8)
+            make.left.equalTo(starSymbol.snp.right).offset(Int.xs)
         }
         movieYear.snp.makeConstraints { make in
             make.top.equalTo(movieDescription.snp.bottom).offset(19)
-            make.left.equalTo(movieStars.snp.right).offset(16)
+            make.left.equalTo(movieStars.snp.right).offset(Int.s2)
         }
         detailsButton.snp.makeConstraints { make in
-            make.top.equalTo(starSymbol.snp.bottom).offset(16)
+            make.top.equalTo(starSymbol.snp.bottom).offset(Int.s2)
             make.left.equalTo(starSymbol.snp.left)
             make.height.equalTo(40)
             make.width.greaterThanOrEqualTo(120)
         }
         addToFavoritesButton.snp.makeConstraints { make in
-            make.top.equalTo(starSymbol.snp.bottom).offset(16)
-            make.left.equalTo(detailsButton.snp.right).offset(8)
+            make.top.equalTo(starSymbol.snp.bottom).offset(Int.s2)
+            make.left.equalTo(detailsButton.snp.right).offset(Int.xs)
             make.height.equalTo(40)
             make.width.greaterThanOrEqualTo(160)
         }
