@@ -1,3 +1,6 @@
+![Demo of the app](Assets.xcassets/homeMovieFlix.gif)
+![Demo of the app](Assets.xcassets/favoritesMovieFlix.gif)
+![Demo of the app](Assets.xcassets/searchMovieFlix.gif)
 
 # MovieFlix
 
