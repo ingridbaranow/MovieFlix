@@ -1,4 +1,7 @@
-![Demo of the Home](AppGIFs/homeMovieFlix.gif)
+<p align="center">
+  <img src="AppGIFs/homeMovieFlix.gif" width="45%" />
+  <img src="AppGIFs/searchMovieFlix.gif" width="45%" />
+</p>
 
 # MovieFlix
 
@@ -38,10 +41,7 @@ This project was developed independently from scratch, as part of a self-guided 
 - Poster images are displayed using `Kingfisher` with placeholder handling if a movie has no poster.
 - Smooth transitions and fade-ins for a polished UI experience.
 
-<p align="center">
-  <img src="AppGIFs/favoritesMovieFlix.gif" width="45%" />
-  <img src="AppGIFs/searchMovieFlix.gif" width="45%" />
-</p>
+![Demo of the Home](AppGIFs/favoritesMovieFlix.gif)
 
 ## Project Structure
 
