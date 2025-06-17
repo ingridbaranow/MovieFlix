@@ -38,8 +38,10 @@ This project was developed independently from scratch, as part of a self-guided 
 - Poster images are displayed using `Kingfisher` with placeholder handling if a movie has no poster.
 - Smooth transitions and fade-ins for a polished UI experience.
 
-![Demo of the Favorites](AppGIFs/favoritesMovieFlix.gif)
-![Demo of the Search](AppGIFs/searchMovieFlix.gif)
+<p align="center">
+  <img src="AppGIFs/favoritesMovieFlix.gif" width="45%" />
+  <img src="AppGIFs/searchMovieFlix.gif" width="45%" />
+</p>
 
 ## Project Structure
 
