@@ -1,6 +1,4 @@
-![Demo of the app](Assets.xcassets/homeMovieFlix.gif)
-![Demo of the app](Assets.xcassets/favoritesMovieFlix.gif)
-![Demo of the app](Assets.xcassets/searchMovieFlix.gif)
+![Demo of the Home](AppGIFs/homeMovieFlix.gif)
 
 # MovieFlix
 
@@ -39,6 +37,9 @@ This project was developed independently from scratch, as part of a self-guided 
 - The **Favorites screen** shows movies the user has saved locally.
 - Poster images are displayed using `Kingfisher` with placeholder handling if a movie has no poster.
 - Smooth transitions and fade-ins for a polished UI experience.
+
+![Demo of the Favorites](AppGIFs/favoritesMovieFlix.gif)
+![Demo of the Search](AppGIFs/searchMovieFlix.gif)
 
 ## Project Structure
 
